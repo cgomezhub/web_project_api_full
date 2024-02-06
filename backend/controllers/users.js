@@ -18,7 +18,7 @@ module.exports.getUsers = (req, res, next) => {
 
 module.exports.createUser = (req, res, next) => {
   const errors = req.validationErrors();
-
+  console.log('errors:', errors);
   if (errors) {
     // Hay errores de validación
     const errorMessages = errors.map((error) => error.msg);
