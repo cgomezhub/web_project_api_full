@@ -18,7 +18,7 @@ const cardSchema = new mongoose.Schema({
           v
         );
       },
-      message: (props) => `${props.value} is not a valid phone number!`,
+      message: (props) => `${props.value} is not a valid URL!`,
     },
   },
 
