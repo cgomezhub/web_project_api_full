@@ -16,6 +16,10 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.createUser = (req, res, next) => {
+  if (!req.body.email || !req.body.password) {
+    return res.status(400).send('Invalid email or password');
+  }
+
   User.findOne({ email: req.body.email })
     .then((existingUser) => {
       if (existingUser) {
@@ -30,17 +34,8 @@ module.exports.createUser = (req, res, next) => {
           .catch((err) => next(err));
       }
     })
-    .catch((err) => {
-      const ERROR_CODE = 400;
-      if (
-        err.password === 'SomeErrorPassword' ||
-        err.email === 'SomeErrorEmail'
-      ) {
-        return res.status(ERROR_CODE).send('Invalid name or email');
-      }
-      next(err);
-      return null;
-    });
+    .catch((err) => next(err));
+  return null;
 };
 
 module.exports.updateProfile = (req, res, next) => {
