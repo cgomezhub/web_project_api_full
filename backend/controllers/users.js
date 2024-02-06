@@ -17,13 +17,6 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.createUser = (req, res, next) => {
-  const errors = req.validationErrors();
-  console.log('errors:', errors);
-  if (errors) {
-    // Hay errores de validación
-    const errorMessages = errors.map((error) => error.msg);
-    return res.status(400).json({ errors: errorMessages });
-  }
   User.findOne({ email: req.body.email })
     .then((existingUser) => {
       if (existingUser) {
@@ -35,7 +28,19 @@ module.exports.createUser = (req, res, next) => {
           .hash(req.body.password, 10)
           .then((hash) => User.create({ ...req.body, password: hash }))
           .then((newUser) => res.send(newUser))
-          .catch((err) => next(err));
+          .catch((err) => {
+            console.log(err);
+            if (
+              err.email === 'ValidationError' ||
+              err.password === 'ValidationError'
+            ) {
+              // Mongoose validation error
+              res.status(400).send(err.message);
+            } else {
+              // Other error
+              next(err);
+            }
+          });
       }
     })
     .catch((err) => next(err));
