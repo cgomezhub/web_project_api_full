@@ -30,10 +30,7 @@ module.exports.createUser = (req, res, next) => {
           .then((newUser) => res.send(newUser))
           .catch((err) => {
             console.log(err);
-            if (
-              err.email === 'ValidationError' ||
-              err.password === 'ValidationError'
-            ) {
+            if (err.name === 'ValidationError') {
               // Mongoose validation error
               res.status(400).send(err.message);
             } else {
