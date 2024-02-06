@@ -23,7 +23,15 @@ mongoose
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('Failed to connect to MongoDB', err));
 
-// 3. Rutas
+// 3. Puebas de caida del servidor
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('El servidor va a caer');
+  }, 0);
+});
+
+// 4. Rutas
 app.post('/signup', createUser);
 app.post('/signin', login);
 

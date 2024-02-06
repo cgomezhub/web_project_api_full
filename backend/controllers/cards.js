@@ -25,7 +25,7 @@ module.exports.createCard = (req, res, next) => {
   return Card.create({ name, link, owner: userId })
     .then((card) => res.send(card))
     .catch((err) => {
-      console.log(err);
+      // console.log(err);
       if (err.name === 'ValidationError') {
         // Mongoose validation error
         res.status(400).send(err.message);
