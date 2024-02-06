@@ -1,3 +1,4 @@
+/* eslint-disable nonblock-statement-body-position */
 /* eslint-disable operator-linebreak */
 const bcrypt = require('bcryptjs');
 
@@ -16,10 +17,15 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.createUser = (req, res, next) => {
-  if (!req.body.email || !req.body.password) {
-    return res.status(400).send('Invalid email or password');
+  const ERROR_CODE = 400;
+  if (
+    Error.email === 'SomeErrorEmail' ||
+    Error.password === 'SomeErrorPassword' ||
+    req.body.email === undefined ||
+    req.body.password === undefined
+  ) {
+    return res.status(ERROR_CODE).send('Invalid email or password');
   }
-
   User.findOne({ email: req.body.email })
     .then((existingUser) => {
       if (existingUser) {
