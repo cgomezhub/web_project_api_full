@@ -17,15 +17,12 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.createUser = (req, res, next) => {
-  const ERROR_CODE = 400;
-  const err = req.validationErrors();
-  if (
-    err.email === 'SomeErrorEmail' ||
-    err.password === 'SomeErrorPassword' ||
-    req.body.email === undefined ||
-    req.body.password === undefined
-  ) {
-    return res.status(ERROR_CODE).send('Invalid email or password');
+  const errors = req.validationErrors();
+
+  if (errors) {
+    // Hay errores de validación
+    const errorMessages = errors.map((error) => error.msg);
+    return res.status(400).json({ errors: errorMessages });
   }
   User.findOne({ email: req.body.email })
     .then((existingUser) => {
