@@ -18,9 +18,10 @@ module.exports.getUsers = (req, res, next) => {
 
 module.exports.createUser = (req, res, next) => {
   const ERROR_CODE = 400;
+  const err = req.validationErrors();
   if (
-    Error.email === 'SomeErrorEmail' ||
-    Error.password === 'SomeErrorPassword' ||
+    err.email === 'SomeErrorEmail' ||
+    err.password === 'SomeErrorPassword' ||
     req.body.email === undefined ||
     req.body.password === undefined
   ) {
