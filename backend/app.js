@@ -1,42 +1,33 @@
+// 1. Importaciones
+
 const express = require('express');
-
 const mongoose = require('mongoose');
-
 const { errors } = require('celebrate');
-
 const cors = require('cors');
-
-require('dotenv').config();
-
+const { requestLogger, errorLogger } = require('./middleware/logger');
 const { login, createUser } = require('./controllers/users');
-
-const { PORT = 3000 } = process.env;
-
 const userRoutes = require('./routes/users');
 const cardRoutes = require('./routes/cards');
+require('dotenv').config();
 
-const { requestLogger, errorLogger } = require('./middleware/logger');
-
+// 2. Configuraciónes y middlewares
 const app = express();
+const { PORT = 3000 } = process.env;
+app.use(express.json());
+app.use(requestLogger);
+app.use(cors());
+app.options('*', cors());
 
 mongoose
   .connect('mongodb://localhost:27017/aroundb')
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('Failed to connect to MongoDB', err));
 
-app.use(express.json());
-
-app.use(requestLogger);
-
-app.use(cors());
-
-app.options('*', cors());
-
+// 3. Rutas
 app.post('/signup', createUser);
 app.post('/signin', login);
 
 app.use(userRoutes);
-
 app.use(cardRoutes);
 
 app.use('*', (req, res) => {
